@@ -1,0 +1,22 @@
+{
+    "rule-name": "Create_new_CurrentTimestamp",
+    "salience": 1010,
+    "run-once": true,
+    "when": [
+        {
+            "?time=": "now()"
+        }
+    ],
+    "then": [
+        {
+            "create": {
+                "model-id": "CurrentTimestamp",
+                "reflect-on-web": false,
+                "data": {
+                    "id": "#CurrentTimestamp",
+                    "timestamp": "?time"
+                }
+            }
+        }
+    ]
+}

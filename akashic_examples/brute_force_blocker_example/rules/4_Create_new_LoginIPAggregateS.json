@@ -1,0 +1,42 @@
+{
+    "rule-name": "Create_new_LoginIPAggregateS",
+    "salience": 350,
+    "run-once": false,
+    "when": [
+        {
+            "?loginAttemptIP=": "LoginAttempt.ip"
+        },
+        {
+            "assert": "not [LoginIPAggregate.ip == ?loginAttemptIP]"
+        }
+    ],
+    "then": [
+        {
+            "create": {
+                "model-id": "LoginIPAggregate",
+                "reflect-on-web": false,
+                "data": {
+                    "ip": "?loginAttemptIP",
+                    "attempt_count": 0
+                }
+            }
+        },
+        {
+            "create": {
+                "model-id": "UniqueIP",
+                "reflect-on-web": false,
+                "data": {
+                    "ip": "?loginAttemptIP"
+                }
+            }
+        },
+        {
+            "return": {
+                "tag": "Create_new_LoginIPAggregateS",
+                "data": {
+                    "attempt_ip": "?loginAttemptIP"
+                }
+            }
+        }
+    ]
+}

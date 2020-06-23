@@ -1,0 +1,46 @@
+{
+    "rule-name": "Update_LoginIPAggregateS_PLUS",
+    "salience": 300,
+    "run-once": false,
+    "when": [
+        {
+            "?unique_ip<-": "[UniqueIP]"
+        },
+        {
+            "?current_time<-": "[CurrentTimestamp]"
+        },
+        {
+            "?link": "?unique_ip.ip == LoginAttempt.ip"
+        },
+        {
+            "?time": "str_to_time(LoginAttempt.timestamp, '%d.%m.%Y. %H:%M:%S')"
+        },
+        {
+            "?in_interval": "sub_times(?current_time.timestamp, ?time) < 180"
+        },
+        {
+            "?new_count=": "count(?link and ?in_interval)"
+        }
+    ],
+    "then": [
+        {
+            "return": {
+                "tag": "Update_LoginIPAggregateS",
+                "data": {
+                    "attempt_ip": "?unique_ip.ip",
+                    "count": "?new_count"
+                }
+            }
+        },
+        {
+            "update": {
+                "model-id": "LoginIPAggregate",
+                "reflect-on-web": false,
+                "data": {
+                    "ip": "?unique_ip.ip",
+                    "attempt_count": "?new_count"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "rule-name": "Detect_brute_force",
+    "salience": 200,
+    "run-once": false,
+    "when": [
+        {
+            "?IPA<-": "[LoginIPAggregate]"
+        },
+        {
+            "assert": "test[?IPA.attempt_count > 5]"
+        }
+    ],
+    "then": [
+        {
+            "return": {
+                "tag": "blocked_ip",
+                "data": {
+                    "ip": "?IPA.ip"
+                }
+            }
+        }
+    ]
+}

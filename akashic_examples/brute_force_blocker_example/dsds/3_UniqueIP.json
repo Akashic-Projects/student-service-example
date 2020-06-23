@@ -1,0 +1,13 @@
+{
+    "data-source-definition-name": "UniqueIP",
+    "model-id": "UniqueIP",
+    "model-description": "Holds data about signle UniqueIP",
+    "can-reflect-on-web": false,
+    "fields": [
+        {
+            "field-name": "ip",
+            "type": "STRING",
+            "use-as": "primary-key"
+        }
+    ]
+}

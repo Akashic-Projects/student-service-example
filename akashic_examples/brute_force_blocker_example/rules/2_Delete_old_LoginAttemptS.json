@@ -1,0 +1,30 @@
+{
+    "rule-name": "Delete_old_LoginAttemptS",
+    "salience": 1005,
+    "run-once": false,
+    "when": [
+        {
+            "?attempt<-": "[LoginAttempt]"
+        },
+        {
+            "?current_time<-": "[CurrentTimestamp]"
+        },
+        {
+            "?time": "str_to_time(?attempt.timestamp, '%d.%m.%Y. %H:%M:%S')"
+        },
+        {
+            "assert": "test[sub_times(?current_time.timestamp, ?time) >= 180]"
+        }
+    ],
+    "then": [
+        {
+            "delete": {
+                "model-id": "LoginAttempt",
+                "reflect-on-web": false,
+                "data": {
+                    "id": "?attempt.id"
+                }
+            }
+        }
+    ]
+}

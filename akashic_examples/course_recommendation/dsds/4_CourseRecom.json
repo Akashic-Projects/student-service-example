@@ -1,0 +1,52 @@
+{
+    "data-source-definition-name": "CourseRecom",
+    "model-id": "CourseRecom",
+    "model-description": "Holds data about single CourseRecom",
+    "can-reflect-on-web": true,
+    "authentication-header": {
+        "auth-header-name": "Authorization",
+        "token-prefix": "bearer",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODA4MFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTU5MjMyOTkyNSwiZXhwIjoxNTkyNTAyNzI1LCJuYmYiOjE1OTIzMjk5MjUsImp0aSI6IlR6T1JPaXRGN21PMVU3UjciLCJzdWIiOjIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.4aIA5dk03gnkusp2JL5k4I5xoWWtQ3mIdJvJjUkAfRg"
+    },
+    "fields": [
+        {
+            "field-name": "id",
+            "type": "INTEGER",
+            "use-as": "primary-key"
+        },
+        {
+            "field-name": "user_id",
+            "type": "INTEGER",
+            "use-as": "data"
+        },
+        {
+            "field-name": "course_id",
+            "type": "INTEGER",
+            "use-as": "data"
+        },
+        {
+            "field-name": "ignored",
+            "type": "BOOLEAN",
+            "use-as": "data"
+        },
+        {
+            "field-name": "accepted",
+            "type": "BOOLEAN",
+            "use-as": "data"
+        }
+    ],
+    "apis": [
+        {
+            "operation": "create",
+            "method": "POST",
+            "url-map": "http://172.33.1.7:8080/api/users/{user_id}/user-courses",
+            "referenced-models": [
+                {
+                    "model-id": "User",
+                    "field-name": "id",
+                    "url-placement": "user_id"
+                }
+            ]
+        }
+    ]
+}

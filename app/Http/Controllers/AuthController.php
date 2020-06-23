@@ -2,26 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Akashic\BruteForceDetectionService;
 use App\Services\AuthService;
 use App\Transformers\LoginTransformer;
 
 use Dingo\Api\Routing\Helpers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 
 class AuthController extends Controller {
     use Helpers;
 
     private $authService;
+    private $bruteForceDetectionService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(AuthService $authService,
+                                BruteForceDetectionService $bruteForceDetectionService)
     {
         $this->authService = $authService;
+        $this->bruteForceDetectionService = $bruteForceDetectionService;
     }
 
     public function login(Request $request)
     {
+        $c1 = $this->bruteForceDetectionService->check_brute_force($request);
+        if (!$c1) {
+            throw new AccessDeniedHttpException('Brute force detected. Back off!');
+        }
+
         $this->validate(
             $request,
             [

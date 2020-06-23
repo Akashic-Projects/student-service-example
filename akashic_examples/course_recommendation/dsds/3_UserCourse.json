@@ -1,0 +1,23 @@
+{
+    "data-source-definition-name": "UserCourse",
+    "model-id": "UserCourse",
+    "model-description": "Holds data about single UserCourse",
+    "can-reflect-on-web": false,
+    "fields": [
+        {
+            "field-name": "id",
+            "type": "INTEGER",
+            "use-as": "primary-key"
+        },
+        {
+            "field-name": "user_id",
+            "type": "INTEGER",
+            "use-as": "data"
+        },
+        {
+            "field-name": "course_id",
+            "type": "INTEGER",
+            "use-as": "data"
+        }
+    ]
+}

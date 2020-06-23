@@ -1,0 +1,28 @@
+{
+    "data-source-definition-name": "Course",
+    "model-id": "Course",
+    "model-description": "Holds general coure data",
+    "can-reflect-on-web": false,
+    "fields": [
+        {
+            "field-name": "id",
+            "type": "INTEGER",
+            "use-as": "primary-key"
+        },
+        {
+            "field-name": "name",
+            "type": "STRING",
+            "use-as": "data"
+        },
+        {
+            "field-name": "start_date",
+            "type": "STRING",
+            "use-as": "data"
+        },
+        {
+            "field-name": "end_date",
+            "type": "STRING",
+            "use-as": "data"
+        }
+    ]
+}

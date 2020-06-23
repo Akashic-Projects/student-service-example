@@ -1,0 +1,21 @@
+{
+    "rule-name": "Remove_old_CurrentTimestamp",
+    "salience": 100,
+    "run-once": true,
+    "when": [
+        {
+            "?old<-": "[CurrentTimestamp]"
+        }
+    ],
+    "then": [
+        {
+            "delete": {
+                "model-id": "CurrentTimestamp",
+                "reflect-on-web": false,
+                "data": {
+                    "id": "?old.id"
+                }
+            }
+        }
+    ]
+}

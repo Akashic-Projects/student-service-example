@@ -1,0 +1,23 @@
+{
+    "data-source-definition-name": "LoginAttempt",
+    "model-id": "LoginAttempt",
+    "model-description": "Holds data about signle login atempt",
+    "can-reflect-on-web": false,
+    "fields": [
+        {
+            "field-name": "id",
+            "type": "STRING",
+            "use-as": "primary-key"
+        },
+        {
+            "field-name": "ip",
+            "type": "STRING",
+            "use-as": "data"
+        },
+        {
+            "field-name": "timestamp",
+            "type": "STRING",
+            "use-as": "data"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "rule-name": "Create_new_LoginAttempt",
+    "salience": 1000,
+    "run-once": true,
+    "when": [
+        {
+            "?time=": "time_to_str(now(), '%d.%m.%Y. %H:%M:%S')"
+        }
+    ],
+    "then": [
+        {
+            "create": {
+                "model-id": "LoginAttempt",
+                "reflect-on-web": false,
+                "data": {
+                    "id": "#3",
+                    "ip": "178.149.191.94",
+                    "timestamp": "?time"
+                }
+            }
+        }
+    ]
+}

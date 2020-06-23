@@ -1,0 +1,18 @@
+{
+    "data-source-definition-name": "CurrentTimestamp",
+    "model-id": "CurrentTimestamp",
+    "model-description": "Holds data about signle CurrentTimestamp",
+    "can-reflect-on-web": false,
+    "fields": [
+        {
+            "field-name": "id",
+            "type": "STRING",
+            "use-as": "primary-key"
+        },
+        {
+            "field-name": "timestamp",
+            "type": "INTEGER",
+            "use-as": "data"
+        }
+    ]
+}
