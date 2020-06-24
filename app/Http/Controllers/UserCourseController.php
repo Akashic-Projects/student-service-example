@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\PaginationQuery;
+use App\Services\Akashic\CourseRecommendationService;
 use App\Services\AuthService;
 use App\Services\UserCourseService;
 use App\Transformers\UserCourseTransformer;
@@ -16,11 +17,14 @@ class UserCourseController extends Controller
 
     private $authService;
     private $userCourseService;
+    private $crs;
 
     public function __construct(AuthService $authService,
-                                UserCourseService $userCourseService) {
+                                UserCourseService $userCourseService,
+                                CourseRecommendationService $crs) {
         $this->authService = $authService;
         $this->userCourseService = $userCourseService;
+        $this->crs = $crs;
     }
 
     public function create(Request $request, int $user_id) {
@@ -40,6 +44,8 @@ class UserCourseController extends Controller
         );
 
         $uc = $this->userCourseService->create($request, $user_id);
+        $this->crs->add_one_user_course($uc);
+
         return $this->response->item($uc, new UserCourseTransformer());
     }
 
@@ -82,6 +88,9 @@ class UserCourseController extends Controller
     public function delete($user_id, $uc_id) {
         $this->authService->authenticateUser($user_id);
         $this->authService->authorizeUser(["student"]);
+
+        $uc = $this->userCourseService->findById($uc_id);
+        $this->crs->remove_one_user_course($uc);
 
         $this->userCourseService->delete($uc_id);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\PaginationQuery;
+use App\Services\Akashic\CourseRecommendationService;
 use App\Services\AuthService;
 use App\Services\UserService;
 use App\Transformers\UserTransformer;
@@ -16,15 +17,20 @@ class UserController extends Controller
 
     private $authService;
     private $userService;
+    private $crs;
 
     public function __construct(AuthService $authService,
-                                UserService $userService) {
+                                UserService $userService,
+                                CourseRecommendationService $crs) {
         $this->authService = $authService;
         $this->userService = $userService;
+        $this->crs = $crs;
     }
 
-    public function test() {
-        return "OK!";
+    public function load_akashic_data() {
+        $this->crs->add_all_data();
+
+        return "All data loaded!";
     }
 
     public function create(Request $request) {

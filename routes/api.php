@@ -14,10 +14,11 @@ $root_group = function (Router $api) {
         # Users API
         $api->post('users', 'UserController@create');
 
+        # Load all data into akashic engine
+        $api->get('akashic','UserController@load_akashic_data');
+
         $api->group(['middleware' => 'auth.jwt'], function (Router $api) {
 
-            # Test
-            $api->get('test','UserController@test');
 
             # Auth API
             $api->post('auth/users/{user_id}/refresh-token', 'AuthController@refreshToken')->where(['user_id' => '[0-9]+']);

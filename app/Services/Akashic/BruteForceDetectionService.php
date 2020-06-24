@@ -21,6 +21,39 @@ class BruteForceDetectionService
         $this->akashicBaseUrl = env('AKASHIC_HOST','http://localhost:5000');
     }
 
+    public function check_brute_force(Request $request) {
+
+        $resp1 = $this->create_login_attempt($request);
+        $resp2 = $this->create_new_current_time();
+
+        /* RUN ENGINE */
+        /* Send request */
+        $client = new Client();
+        $uri = $this->akashicBaseUrl . '/direct/run';
+        try {
+            $response = $client->request('GET', $uri);
+        } catch (ServerException $e) {
+            Log::critical(Psr7\str($e->getResponse()));
+            throw new BadRequestHttpException("Error while running engine on brute force detection example.");
+        }  catch (RequestException $e) {
+            $resp = $e->getResponse();
+            dd((string) $resp->getBody());
+        }
+
+        $resp = json_decode($response->getBody());
+        //dd($resp);
+
+        foreach ($resp->data as $ret) {
+            if (strcmp($ret->meta->tag, "blocked_ip") == 0 and
+                (strcmp($ret->data->ip, $request->ip()) == 0)) {
+                return false;
+            }
+        }
+
+        return $resp;
+    }
+
+
     private function create_login_attempt(Request $request) {
         $uuid = str_replace("-", "", Uuid::generate()->string);
         $rule = (object) [
@@ -115,39 +148,5 @@ class BruteForceDetectionService
             }
         }
         return json_decode($response->getBody());
-    }
-
-
-
-    public function check_brute_force(Request $request) {
-
-        $resp1 = $this->create_login_attempt($request);
-        $resp2 = $this->create_new_current_time();
-
-        /* RUN ENGINE */
-        /* Send request */
-        $client = new Client();
-        $uri = $this->akashicBaseUrl . '/direct/run';
-        try {
-            $response = $client->request('GET', $uri);
-        } catch (ServerException $e) {
-            Log::critical(Psr7\str($e->getResponse()));
-            throw new BadRequestHttpException("Error while adding 'Add_login_attempt' rule.");
-        }  catch (RequestException $e) {
-            $resp = $e->getResponse();
-            dd((string) $resp->getBody());
-        }
-
-        $resp = json_decode($response->getBody());
-        //dd($resp);
-
-        foreach ($resp->data as $ret) {
-            if (strcmp($ret->meta->tag, "blocked_ip") == 0 and
-                (strcmp($ret->data->ip, $request->ip()) == 0)) {
-                return false;
-            }
-        }
-
-        return $resp;
     }
 }

@@ -1,0 +1,45 @@
+{
+    "rule-name": "Recommend_Diskretna_matematika",
+    "salience": 2000,
+    "run-once": false,
+    "when": [
+        {
+            "?c1<-": "[Course.name == 'Algebra']"
+        },
+        {
+            "?c2<-": "[Course.name == 'Matematicka analiza']"
+        },
+        {
+            "?c_to_recom<-": "[Course.name == 'Diskretna matematika']"
+        },
+        {
+            "?user<-": "[User]"
+        },
+        {
+            "assert": "exists[UserCourse.user_id == ?user.id and UserCourse.course_id == ?c2.id] and exists[UserCourse.user_id == ?user.id and UserCourse.course_id == ?c1.id]"
+        }
+    ],
+    "then": [
+        {
+            "create": {
+                "model-id": "CourseRecom",
+                "reflect-on-web": true,
+                "data": {
+                    "user_id": "?user.id",
+                    "id": 1,
+                    "course_id": "?c_to_recom.id",
+                    "ignored": false,
+                    "accepted": false
+                }
+            }
+        },
+        {
+            "return": {
+                "tag": "recomm_DM",
+                "data": {
+                    "success": true
+                }
+            }
+        }
+    ]
+}
