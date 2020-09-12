@@ -4,24 +4,23 @@ namespace App\Services;
 
 use App\Helpers\PaginationData;
 use App\Helpers\PaginationQuery;
-use App\Models\User;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class UserService {
+
+class SubjectService {
 
     public function create($request) {
         $user_attributes = $request->all();
-        $user_attributes['password'] = Hash::make($user_attributes['password']);
-        $user_attributes['authority_id'] = 4;
 
-        return User::create($user_attributes);
+        return Subject::create($user_attributes);
     }
 
-    public function findById($user_id)
+    public function findById($subject_id)
     {
-        return  User::find($user_id);
+        return  Subject::find($subject_id);
     }
 
     public function getZeroIfNull($value) {
@@ -30,16 +29,13 @@ class UserService {
         }
         return $value;
     }
+
     public $sortAvailableFields = [
-        'id'        => 'users.id',
-        'name'      => 'LOWER(users.name)',
-        'email'     => 'LOWER(users.email)',
-        'createdAt' => 'users.created_at',
-        'updatedAt' => 'users.updated_at',
+        'id'          => 'subjects.id',
+        'name'        => 'LOWER(subjects.name)',
     ];
     public $searchAvailableFields = [
-        'email' => 'LOWER(users.email)',
-        'name'  => 'LOWER(users.name)',
+        'name'  => 'LOWER(subjects.name)',
     ];
 
     public function findAll(PaginationQuery $paginationQuery)
@@ -51,7 +47,7 @@ class UserService {
             throw new BadRequestHttpException("Bad sorting-order field.");
         }
 
-        $query = User::select('users.*');
+        $query = Subject::select('subjects.*');
 
         if ($paginationQuery->searchByField != null && $paginationQuery->searchString != null) {
             $fieldCount = count($paginationQuery->searchByField);
@@ -90,28 +86,28 @@ class UserService {
         );
     }
 
-    public function changePassword($request, $user_id) {
-        $user = $this->findById($user_id);
+    public function update(Request $request, $subject_id) {
 
-        $user_attributes = $request->all();
-
-        if (!Hash::check( $user_attributes['old_password'], $user->password)) {
-            throw new BadRequestHttpException("Wrong password.");
+        $subject = $this->findById($subject_id);
+        if ($subject == null) {
+            throw new BadRequestHttpException("Subject with given id does not exist.");
         }
 
-        $user->password = Hash::make($user_attributes['new_password']);
-        $user->save();
+        $attributes = $request->all();
+        $subject->name = $attributes['name'];
 
-        return $user;
+        $subject->save();
+        return $subject;
+
     }
 
-    public function delete($user_id) {
-        $user = $this->findById($user_id);
+    public function delete($subject_id) {
+        $subject = $this->findById($subject_id);
 
-        if ($user == null) {
-            throw new BadRequestHttpException("User with given id does not exist.");
+        if ($subject == null) {
+            throw new BadRequestHttpException("Subject with given id does not exist.");
         }
 
-        $user->delete();
+        $subject->delete();
     }
 }

@@ -8,8 +8,12 @@ use League\Fractal\TransformerAbstract;
 
 class UserCourseTransformer extends TransformerAbstract
 {
+    protected $defaultIncludes = [
+        'course',
+    ];
     public function transform(UserCourse $uc)
     {
+
         if (empty($uc)){
             return null;
         }
@@ -22,5 +26,20 @@ class UserCourseTransformer extends TransformerAbstract
             'enrolled'      => $uc->enrolled,
             'finished'      => $uc->finished,
         ];
+    }
+
+    public function includeCourse($data)
+    {
+        if (empty($data)){
+            return null;
+        }
+        $course = $data->course;
+
+        if (empty($course)){
+            return null;
+        }
+
+        return $this->item($course, new CourseTransformer());
+
     }
 }

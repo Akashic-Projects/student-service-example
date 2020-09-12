@@ -41,7 +41,7 @@ class UserController extends Controller
                 'email'    => 'required|email||min:4|max:80|unique:users,email,NULL,id,deleted_at,NULL',
                 'password' => 'required|string|min:3|max:30',
                 'name'     => 'required|string|min:2|max:60',
-                'age'     => 'required|integer',
+                'age'     =>  'required|integer',
             ]
         );
 
@@ -64,6 +64,20 @@ class UserController extends Controller
         $paginationData = $this->userService->findAll($paginationQuery);
 
         return $paginationData->createResponse(new UserTransformer());
+    }
+
+    public function changePassword(Request $request, $user_id) {
+
+        $this->validate(
+            $request,
+            [
+                'old_password'  => 'required|string|min:3|max:30',
+                'new_password'  => 'required|string|min:3|max:30',
+            ]
+        );
+
+        $user = $this->userService->changePassword($request, $user_id);
+        return $this->response->item($user, new UserTransformer());
     }
 
     public function delete($user_id) {

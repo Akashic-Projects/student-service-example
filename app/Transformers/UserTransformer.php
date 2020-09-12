@@ -17,6 +17,7 @@ class UserTransformer extends TransformerAbstract {
             'name'          => $user->name,
             'age'           => $user->age,
             'email'         => $user->email,
+            'authority'     => $user->authority->name
         ];
     }
 
