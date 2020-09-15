@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Helpers\PaginationData;
 use App\Helpers\PaginationQuery;
-use App\Models\CourseRecom;
+use App\Models\UserNotif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 
-class CourseRecomService
+class UserNotifService
 {
     private $userService;
     private $courseService;
@@ -36,20 +36,20 @@ class CourseRecomService
             throw new BadRequestHttpException("Course with given id does not exist.");
         }
 
-        $found = CourseRecom::where("user_id", "=", $user_id)
+        $found = UserNotif::where("user_id", "=", $user_id)
             ->where("course_id", "=", $attributes['course_id'])->first();
         if ($found != null) {
-            throw new BadRequestHttpException("Course recomendation for given user already exists.");
+            throw new BadRequestHttpException("Notification for given course already exists.");
         }
 
         $attributes['user_id'] = $user_id;
 
-        return CourseRecom::create($attributes);
+        return UserNotif::create($attributes);
     }
 
-    public function findById($cr_id)
+    public function findById($un_id)
     {
-        return CourseRecom::find($cr_id);
+        return UserNotif::find($un_id);
     }
 
     public function getZeroIfNull($value) {
@@ -60,9 +60,8 @@ class CourseRecomService
     }
 
     public $sortAvailableFields = [
-        'id'             => 'courses_recom.id',
-        'ignored'        => 'courses_recom.ignored',
-        'accepted'       => 'courses_recom.accepted',
+        'id'             => 'user_notifs.id',
+        'ignored'        => 'user_notifs.ignored',
     ];
 
     public function findAll(PaginationQuery $paginationQuery, $user_id)
@@ -74,12 +73,11 @@ class CourseRecomService
             throw new BadRequestHttpException("Bad sorting-order field.");
         }
 
-        $query = CourseRecom::select('courses_recom.*')
-            ->join('users', 'users.id', '=', 'courses_recom.user_id')
-            ->join('courses', 'courses.id', '=', 'courses_recom.course_id')
+        $query = UserNotif::select('user_notifs.*')
+            ->join('users', 'users.id', '=', 'user_notifs.user_id')
+            ->join('courses', 'courses.id', '=', 'user_notifs.course_id')
             ->where('users.id', '=', $user_id)
-            ->where('courses_recom.ignored', '=', 0)
-            ->where('courses_recom.accepted', '=', 0);
+            ->where('user_notifs.ignored', '=', 0);
 
         if ($paginationQuery->sortByField != null) {
             if (!array_key_exists($paginationQuery->sortByField, $this->sortAvailableFields)) {
@@ -108,30 +106,29 @@ class CourseRecomService
         );
     }
 
-    public function update(Request $request, $cr_id) {
+    public function update(Request $request, $un_id) {
 
-        $cr = $this->findById($cr_id);
-        if ($cr == null) {
-            throw new BadRequestHttpException("CourseRecomendation with given id does not exist.");
+        $un = $this->findById($un_id);
+        if ($un == null) {
+            throw new BadRequestHttpException("UserNotif with given id does not exist.");
         }
 
         $attributes = $request->all();
 
-        $cr->ignored = $attributes['ignored'];
-        $cr->accepted = $attributes['accepted'];
+        $un->ignored = $attributes['ignored'];
 
-        $cr->save();
+        $un->save();
 
-        return $cr;
+        return $un;
     }
 
-    public function delete($cr_id) {
-        $cr = $this->findById($cr_id);
+    public function delete($un_id) {
+        $un = $this->findById($un_id);
 
-        if ($cr == null) {
-            throw new BadRequestHttpException("CourseRecomendation with given id does not exist.");
+        if ($un == null) {
+            throw new BadRequestHttpException("UserNotif with given id does not exist.");
         }
 
-        $cr->delete();
+        $un->delete();
     }
 }

@@ -53,7 +53,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasAuthority($authority_name)
     {
-        return $this->authority->name == $authority_name;
+        return strcmp($this->authority->name, $authority_name) == 0;
     }
 
     /**

@@ -39,7 +39,6 @@ class UserCourseController extends Controller
                 'grade'     => 'required|integer',
                 'rating'    => 'required|integer',
                 'enrolled'  => 'required|boolean',
-                'finished'  => 'required|boolean',
             ]
         );
 
@@ -77,11 +76,16 @@ class UserCourseController extends Controller
                 'grade'     => 'required|integer',
                 'rating'    => 'required|integer',
                 'enrolled'  => 'required|boolean',
-                'finished'  => 'required|boolean',
             ]
         );
 
+        $us = $this->userCourseService->findById($uc_id);
+        $this->crs->remove_one_user_course($us);
+
         $uc = $this->userCourseService->update($request, $uc_id);
+
+        $this->crs->add_one_user_course($uc);
+
         return $this->response->item($uc, new UserCourseTransformer());
     }
 
@@ -89,8 +93,8 @@ class UserCourseController extends Controller
         $this->authService->authenticateUser($user_id);
         $this->authService->authorizeUser(["student"]);
 
-        $uc = $this->userCourseService->findById($uc_id);
-        $this->crs->remove_one_user_course($uc);
+        $us = $this->userCourseService->findById($uc_id);
+        $this->crs->remove_one_user_course($us);
 
         $this->userCourseService->delete($uc_id);
     }

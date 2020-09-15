@@ -29,7 +29,7 @@ class AuthController extends Controller {
     {
         $c1 = $this->bruteForceDetectionService->check_brute_force($request);
         if (!$c1) {
-            throw new AccessDeniedHttpException('Brute force detected. Back off!');
+            throw new AccessDeniedHttpException('Brute force attack detected. Back off!');
         }
 
         $this->validate(

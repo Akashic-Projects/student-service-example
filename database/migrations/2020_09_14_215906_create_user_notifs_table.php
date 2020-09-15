@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoursesRecomTable extends Migration
+class CreateUserNotifsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCoursesRecomTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses_recom', function (Blueprint $table) {
+        Schema::create('user_notifs', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('user_id')->unsigned();
@@ -23,9 +23,6 @@ class CreateCoursesRecomTable extends Migration
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
 
             $table->boolean('ignored')->default(false);
-            $table->boolean('accepted')->default(false);
-
-            $table->float('priority');
 
             $table->timestamps();
             $table->softDeletes();
@@ -39,11 +36,11 @@ class CreateCoursesRecomTable extends Migration
      */
     public function down()
     {
-        Schema::table('courses_recom', function (Blueprint $table) {
+        Schema::table('user_courses', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['course_id']);
         });
 
-        Schema::dropIfExists('courses_recom');
+        Schema::dropIfExists('user_notifs');
     }
 }

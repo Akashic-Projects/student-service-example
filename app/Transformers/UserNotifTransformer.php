@@ -2,28 +2,26 @@
 
 namespace App\Transformers;
 
-use App\Models\UserCourse;
+use App\Models\UserNotif;
 use League\Fractal\TransformerAbstract;
 
 
-class UserCourseTransformer extends TransformerAbstract
+class UserNotifTransformer extends TransformerAbstract
 {
     protected $defaultIncludes = [
         'course',
     ];
-    public function transform(UserCourse $uc)
+    public function transform(UserNotif $un)
     {
 
-        if (empty($uc)){
+        if (empty($un)){
             return null;
         }
         return [
-            'id'            => $uc->id,
-            'user_id'       => $uc->user_id,
-            'course_id'     => $uc->course_id,
-            'grade'         => $uc->grade,
-            'rating'        => $uc->rating,
-            'enrolled'      => $uc->enrolled,
+            'id'            => $un->id,
+            'user_id'       => $un->user_id,
+            'course_id'     => $un->course_id,
+            'ignored'       => $un->ignored,
         ];
     }
 

@@ -5,25 +5,21 @@ namespace  App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CourseRecom extends Model {
+class UserNotif extends Model {
     use SoftDeletes;
 
-    protected $table = 'courses_recom';
+    protected $table = 'user_notifs';
 
     protected $fillable = [
         'user_id',
         'course_id',
         'ignored',
-        'accepted',
-        'priority',
     ];
 
     protected $casts = [
-        'user_id'     => 'integer',
-        'course_id'   => 'integer',
-        'ignored'     => 'boolean',
-        'accepted'    => 'boolean',
-        'priority'    => 'float',
+        'user_id'      => 'integer',
+        'course_id'    => 'integer',
+        'ignored'      => 'boolean',
     ];
 
     public function user()

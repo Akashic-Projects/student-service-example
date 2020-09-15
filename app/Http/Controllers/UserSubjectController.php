@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\PaginationQuery;
+use App\Services\Akashic\CourseRecommendationService;
 use App\Services\AuthService;
 use App\Services\UserSubjectService;
 use App\Transformers\UserSubjectTransformer;
@@ -16,11 +17,14 @@ class UserSubjectController extends Controller
 
     private $authService;
     private $userSubjectService;
+    private $crs;
 
     public function __construct(AuthService $authService,
-                                UserSubjectService $userSubjectService) {
+                                UserSubjectService $userSubjectService,
+                                CourseRecommendationService $crs) {
         $this->authService = $authService;
         $this->userSubjectService = $userSubjectService;
+        $this->crs = $crs;
     }
 
     public function create(Request $request, int $user_id) {
@@ -37,6 +41,8 @@ class UserSubjectController extends Controller
         );
 
         $us = $this->userSubjectService->create($request, $user_id);
+        $this->crs->add_one_user_subject($us);
+
         return $this->response->item($us, new UserSubjectTransformer());
     }
 
@@ -69,13 +75,22 @@ class UserSubjectController extends Controller
             ]
         );
 
+        $us = $this->userSubjectService->findById($us_id);
+        $this->crs->remove_one_user_subject($us);
+
         $us = $this->userSubjectService->update($request, $us_id);
+
+        $this->crs->add_one_user_subject($us);
+
         return $this->response->item($us, new UserSubjectTransformer());
     }
 
     public function delete($user_id, $us_id) {
         $this->authService->authenticateUser($user_id);
         $this->authService->authorizeUser(["student"]);
+
+        $us = $this->userSubjectService->findById($us_id);
+        $this->crs->remove_one_user_subject($us);
 
         $this->userSubjectService->delete($us_id);
     }

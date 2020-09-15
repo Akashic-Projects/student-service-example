@@ -43,12 +43,35 @@ $root_group = function (Router $api) {
             $api->put('users/{user_id}/user-courses/{uc_id}',   'UserCourseController@update')->where(['user_id' => '[0-9]+', 'uc_id' => '[0-9]+']);
             $api->delete('users/{user_id}/user-courses/{uc_id}','UserCourseController@delete')->where(['user_id' => '[0-9]+', 'uc_id' => '[0-9]+']);
 
+
+            # Subjects API
+            $api->post('subjects',                'SubjectController@create');
+            $api->get('subjects/{subject_id}',    'SubjectController@findById')->where(['subject_id' => '[0-9]+']);
+            $api->get('subjects',                 'SubjectController@findAll');
+            $api->put('subjects/{subject_id}',    'SubjectController@update')->where(['subject_id' => '[0-9]+']);
+            $api->delete('subjects/{subject_id}', 'SubjectController@delete')->where(['subject_id' => '[0-9]+']);
+
+
+            # UserSubjects API
+            $api->post('users/{user_id}/user-subjects',          'UserSubjectController@create')->where(['user_id' => '[0-9]+']);
+            $api->get('users/{user_id}/user-subjects/{us_id}',   'UserSubjectController@findById')->where(['user_id' => '[0-9]+', 'us_id' => '[0-9]+']);
+            $api->get('users/{user_id}/user-subjects',           'UserSubjectController@findAll')->where(['user_id' => '[0-9]+']);
+            $api->put('users/{user_id}/user-subjects/{us_id}',   'UserSubjectController@update')->where(['user_id' => '[0-9]+', 'us_id' => '[0-9]+']);
+            $api->delete('users/{user_id}/user-subjects/{us_id}','UserSubjectController@delete')->where(['user_id' => '[0-9]+', 'us_id' => '[0-9]+']);
+
             # UserRecomentadion API
             $api->post('users/{user_id}/user-recoms',          'CourseRecomController@create')->where(['user_id' => '[0-9]+']);
             $api->get('users/{user_id}/user-recoms/{cr_id}',   'CourseRecomController@findById')->where(['user_id' => '[0-9]+', 'cr_id' => '[0-9]+']);
             $api->get('users/{user_id}/user-recoms',           'CourseRecomController@findAll')->where(['user_id' => '[0-9]+']);
             $api->put('users/{user_id}/user-recoms/{cr_id}',   'CourseRecomController@update')->where(['user_id' => '[0-9]+', 'cr_id' => '[0-9]+']);
             $api->delete('users/{user_id}/user-recoms/{cr_id}','CourseRecomController@delete')->where(['user_id' => '[0-9]+', 'cr_id' => '[0-9]+']);
+
+            # UserNotif API
+            $api->post('users/{user_id}/user-notifs',          'UserNotifController@create')->where(['user_id' => '[0-9]+']);
+            $api->get('users/{user_id}/user-notifs/{un_id}',   'UserNotifController@findById')->where(['user_id' => '[0-9]+', 'un_id' => '[0-9]+']);
+            $api->get('users/{user_id}/user-notifs',           'UserNotifController@findAll')->where(['user_id' => '[0-9]+']);
+            $api->put('users/{user_id}/user-notifs/{un_id}',   'UserNotifController@update')->where(['user_id' => '[0-9]+', 'un_id' => '[0-9]+']);
+            $api->delete('users/{user_id}/user-notifs/{un_id}','UserNotifController@delete')->where(['user_id' => '[0-9]+', 'un_id' => '[0-9]+']);
         });
     });
 };

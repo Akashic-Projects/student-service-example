@@ -25,8 +25,6 @@ class CreateUserCoursesTable extends Migration
             $table->integer('grade');
             $table->integer('rating');
             $table->boolean('enrolled')->default(false);
-            $table->boolean('finished')->default(false);
-
 
             $table->timestamps();
             $table->softDeletes();

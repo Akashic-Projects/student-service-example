@@ -98,7 +98,7 @@ class AuthService
                 return true;
             }
         }
-        return abort(401, 'This action is unauthorized.');
+        return abort(401, 'This action is unauthorized. User has no requred authority.');
     }
 
 }

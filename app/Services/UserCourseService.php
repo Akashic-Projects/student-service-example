@@ -35,11 +35,17 @@ class UserCourseService
         if ($course == null) {
             throw new BadRequestHttpException("Course with given id does not exist.");
         }
-        $found = UserCourse::where("user_id", "=", $user_id)
-            ->where("course_id", "=", $attributes['course_id'])->first();
-        if ($found != null) {
-            throw new BadRequestHttpException("User-course info for given user already exists.");
+//        $found = UserCourse::where("user_id", "=", $user_id)
+//            ->where("course_id", "=", $attributes['course_id'])->first()
+//            ->where("deleted_at", "!=", null);
+        foreach ($user->courses as $c){
+            if (strcmp($c->course->name, $course->name) == 0){
+                throw new BadRequestHttpException("User-course info for given user already exists.");
+            }
         }
+//        if ($found != null) {
+//            throw new BadRequestHttpException("User-course info for given user already exists.");
+//        }
 
         $attributes['user_id'] = $user_id;
 
@@ -63,7 +69,6 @@ class UserCourseService
         'grade'        => 'user_courses.grade',
         'rating'       => 'user_courses.rating',
         'enrolled'     => 'user_courses.enrolled',
-        'finished'     => 'user_courses.finished',
         'name'         => 'LOWER(courses.name)',
         'startDate'    => 'courses.start_date',
         'endDate'      => 'courses.end_date',
@@ -135,7 +140,6 @@ class UserCourseService
         $uc->grade = $attributes['grade'];
         $uc->rating = $attributes['rating'];
         $uc->enrolled = $attributes['enrolled'];
-        $uc->finished  = $attributes['finished'];
 
         $uc->save();
 

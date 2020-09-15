@@ -6,24 +6,26 @@ use App\Helpers\PaginationQuery;
 use App\Services\Akashic\CourseRecommendationService;
 use App\Services\AuthService;
 use App\Services\CourseRecomService;
+use App\Services\UserNotifService;
 use App\Transformers\CourseRecomTransformer;
+use App\Transformers\UserNotifTransformer;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 
 
-class CourseRecomController extends Controller
+class UserNotifController extends Controller
 {
     use Helpers;
 
     private $authService;
-    private $courseRecomService;
+    private $userNotifService;
     private $crs;
 
     public function __construct(AuthService $authService,
-                                CourseRecomService $courseRecomService,
+                                UserNotifService $userNotifService,
                                 CourseRecommendationService $crs) {
         $this->authService = $authService;
-        $this->courseRecomService = $courseRecomService;
+        $this->userNotifService = $userNotifService;
         $this->crs = $crs;
     }
 
@@ -36,22 +38,20 @@ class CourseRecomController extends Controller
             [
                 'course_id'   => 'required|integer',
                 'ignored'     => 'required|boolean',
-                'accepted'    => 'required|boolean',
-                'priority'    => 'required|numeric'
             ]
         );
 
-        $ur = $this->courseRecomService->create($request, $user_id);
+        $un = $this->userNotifService->create($request, $user_id);
 
-        return $this->response->item($ur, new CourseRecomTransformer());
+        return $this->response->item($un, new UserNotifTransformer());
     }
 
-    public function findById(Request $request, $user_id, $ur_id)
+    public function findById(Request $request, $user_id, $un_id)
     {
         $this->authService->authenticateUser($user_id);
 
-        $ur = $this->courseRecomService->findById($ur_id);
-        return $this->response->item($ur, new CourseRecomTransformer());
+        $un = $this->userNotifService->findById($un_id);
+        return $this->response->item($un, new UserNotifTransformer());
     }
 
     public function findAll(Request $request, $user_id)
@@ -59,12 +59,12 @@ class CourseRecomController extends Controller
         $this->authService->authenticateUser($user_id);
 
         $paginationQuery = (new PaginationQuery())->assemble($request);
-        $paginationData = $this->courseRecomService->findAll($paginationQuery, $user_id);
+        $paginationData = $this->userNotifService->findAll($paginationQuery, $user_id);
 
-        return $paginationData->createResponse(new CourseRecomTransformer());
+        return $paginationData->createResponse(new UserNotifTransformer());
     }
 
-    public function update(Request $request, $user_id, $ur_id) {
+    public function update(Request $request, $user_id, $un_id) {
 
         $this->authService->authenticateUser($user_id);
         $this->authService->authorizeUser(["akashic", "student"]);
@@ -73,28 +73,27 @@ class CourseRecomController extends Controller
             $request,
             [
                 'ignored'     => 'required|boolean',
-                'accepted'    => 'required|boolean'
             ]
         );
 
         //$ur = $this->courseRecomService->findById($ur_id);
         //$this->crs->remove_one_course_recom($ur);
 
-        $ur = $this->courseRecomService->update($request, $ur_id);
+        $un = $this->userNotifService->update($request, $un_id);
 
         //$this->crs->add_one_course_recom($ur);
 
-        return $this->response->item($ur, new CourseRecomTransformer());
+        return $this->response->item($un, new UserNotifTransformer());
     }
 
-    public function delete($user_id, $ur_id) {
+    public function delete($user_id, $un_id) {
 
         $this->authService->authenticateUser($user_id);
         $this->authService->authorizeUser(["akashic"]);
 
-        $ur = $this->courseRecomService->findById($ur_id);
-        $this->crs->remove_one_user_course($ur);
+        $un = $this->userNotifService->findById($un_id);
+        $this->crs->remove_one_user_notif($un);
 
-        $this->courseRecomService->delete($ur_id);
+        $this->userNotifService->delete($un_id);
     }
 }

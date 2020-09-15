@@ -16,7 +16,6 @@ class UserCourse extends Model {
         'grade',
         'rating',
         'enrolled',
-        'finished',
     ];
 
     protected $casts = [
@@ -25,7 +24,6 @@ class UserCourse extends Model {
         'grade'        => 'integer',
         'rating'       => 'integer',
         'enrolled'     => 'boolean',
-        'finished'     => 'boolean',
     ];
 
     public function user()

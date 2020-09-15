@@ -8,6 +8,9 @@ use League\Fractal\TransformerAbstract;
 
 class UserSubjectTransformer extends TransformerAbstract
 {
+    protected $defaultIncludes = [
+        'subject',
+    ];
     public function transform(UserSubject $us)
     {
         if (empty($us)){
@@ -19,5 +22,20 @@ class UserSubjectTransformer extends TransformerAbstract
             'subject_id'    => $us->subject_id,
             'rating'        => $us->rating,
         ];
+    }
+
+    public function includeSubject($data)
+    {
+        if (empty($data)){
+            return null;
+        }
+        $subject = $data->subject;
+
+        if (empty($subject)){
+            return null;
+        }
+
+        return $this->item($subject, new SubjectTransformer());
+
     }
 }
