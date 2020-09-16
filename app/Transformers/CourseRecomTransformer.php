@@ -22,7 +22,7 @@ class CourseRecomTransformer extends TransformerAbstract
             'course_id'     => $ur->course_id,
             'ignored'       => $ur->ignored,
             'accepted'      => $ur->accepted,
-            'priority'      => $ur->priority,
+            'priority'      => $ur->priority + 0.000001,
         ];
     }
     public function includeCourse($data)
